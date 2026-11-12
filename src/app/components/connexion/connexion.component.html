@@ -1,0 +1,33 @@
+<div class="container page">
+  <div class="page-head text-center d-block">
+    <span class="kicker">Connexion</span>
+    <h1>Accédez à votre espace</h1>
+    <p class="text-secondary">Vous êtes adhérent ou administrateur ?</p>
+  </div>
+
+  @if (needLogin) {
+    <div class="alert-info-soft notice" role="status">
+      <i class="bi bi-info-circle-fill"></i> Vous devez vous connecter (adhérent ou administrateur) pour accéder à l'espace correspondant.
+    </div>
+  }
+
+  <div class="row g-4 justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <a class="choice" routerLink="/login" [queryParams]="adherentParams()">
+        <span class="choice-ico"><i class="bi bi-person-badge"></i></span>
+        <h2>Se connecter comme adhérent</h2>
+        <p>Empruntez des livres, suivez vos demandes et consultez votre historique.</p>
+        <span class="choice-go">Espace adhérent <i class="bi bi-arrow-right"></i></span>
+      </a>
+    </div>
+    <div class="col-md-6 col-lg-5">
+      <a class="choice" routerLink="/admin/login" [queryParams]="adminParams()">
+        <span class="choice-ico"><i class="bi bi-shield-lock"></i></span>
+        <h2>Se connecter comme administrateur</h2>
+        <p>Gérez les livres, les adhérents, les demandes, les emprunts et les retours.</p>
+        <span class="choice-go">Espace administrateur <i class="bi bi-arrow-right"></i></span>
+      </a>
+    </div>
+  </div>
+
+</div>

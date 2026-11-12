@@ -1,0 +1,12 @@
+.toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 16px; }
+.toolbar .panel-title small { font-family: 'DM Sans', sans-serif; color: var(--muted); font-size: .85rem; font-weight: 500; }
+.filters { display: flex; flex-wrap: wrap; gap: 10px; }
+.filters .form-control { width: 250px; }
+.filters .form-select { width: 200px; }
+.book-cell { display: flex; align-items: center; gap: 12px; min-width: 220px; }
+.book-cell img { width: 40px; height: 54px; object-fit: cover; border-radius: 5px; box-shadow: 0 2px 6px rgba(0, 0, 0, .2); flex-shrink: 0; }
+.book-cell strong { display: block; line-height: 1.25; }
+.book-cell small { color: var(--muted); }
+.btn-danger-custom { background: var(--danger); border: 1px solid var(--danger); color: #fff; font-weight: 600; border-radius: 10px; padding: 10px 18px; }
+.btn-danger-custom:hover { background: #a62f23; }
+@media (max-width: 767.98px) { .filters .form-control, .filters .form-select { width: 100%; } .filters { width: 100%; } }

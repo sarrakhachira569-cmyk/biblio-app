@@ -1,0 +1,52 @@
+<div class="container page">
+  <div class="page-head">
+    <div>
+      <span class="kicker">Notre collection</span>
+      <h1>Catalogue des livres</h1>
+      <p>Recherchez un livre, filtrez par catégorie, puis empruntez-le en un clic.</p>
+    </div>
+  </div>
+
+  <div class="tools panel">
+    <div class="search">
+      <i class="bi bi-search"></i>
+      <input type="search" class="form-control" placeholder="Rechercher par titre ou par auteur…" aria-label="Rechercher par titre ou par auteur" [value]="query()" (input)="onSearch($event)" />
+    </div>
+
+    <div class="cats" role="group" aria-label="Filtrer par catégorie">
+      <button type="button" class="cat" [class.active]="category() === ALL" (click)="category.set(ALL)">Toutes</button>
+      @for (c of categories(); track c) {
+        <button type="button" class="cat" [class.active]="category() === c" (click)="category.set(c)">{{ c }} <small>{{ countIn(c) }}</small></button>
+      }
+    </div>
+
+    <div class="tools-foot">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="onlyAvail" [checked]="onlyAvailable()" (change)="onToggleAvailable($event)" />
+        <label class="form-check-label" for="onlyAvail">Afficher seulement les livres disponibles</label>
+      </div>
+      <div class="count" aria-live="polite">
+        <strong>{{ results().length }}</strong> {{ results().length > 1 ? 'livres trouvés' : 'livre trouvé' }}
+        @if (hasFilter()) {
+          <button type="button" class="reset" (click)="reset()"><i class="bi bi-x-circle"></i> Réinitialiser</button>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (results().length) {
+    <!-- 4 livres par ligne sur grand écran, 2 sur tablette, 1 sur téléphone -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4 mt-1">
+      @for (b of results(); track b.id) {
+        <div class="col"><app-book-card [book]="b" /></div>
+      }
+    </div>
+  } @else {
+    <div class="empty panel">
+      <i class="bi bi-journal-x"></i>
+      <h2>Aucun livre ne correspond à votre recherche</h2>
+      <p>Essayez un autre mot, une autre catégorie, ou retirez les filtres.</p>
+      <button type="button" class="btn-navy" (click)="reset()">Voir tous les livres</button>
+    </div>
+  }
+</div>

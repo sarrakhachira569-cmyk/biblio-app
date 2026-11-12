@@ -1,0 +1,70 @@
+<div class="container page">
+  <div class="auth-wrap">
+    <aside class="auth-aside">
+      @if (isAdmin) {
+        <span class="kicker" style="color: var(--gold)">Espace administrateur</span>
+        <h2>Gérez la<br /><em>bibliothèque.</em></h2>
+        <p>Accès réservé au personnel de la bibliothèque.</p>
+        <ul>
+          <li><i class="bi bi-check-circle-fill"></i> Livres et adhérents</li>
+          <li><i class="bi bi-check-circle-fill"></i> Demandes, emprunts et retours</li>
+          <li><i class="bi bi-check-circle-fill"></i> Statistiques en temps réel</li>
+        </ul>
+      } @else {
+        <span class="kicker" style="color: var(--gold)">Espace adhérent</span>
+        <h2>Votre bibliothèque,<br /><em>à portée de main.</em></h2>
+        <p>Connectez-vous pour suivre vos emprunts et vos demandes.</p>
+        <ul>
+          <li><i class="bi bi-check-circle-fill"></i> Historique de vos emprunts</li>
+          <li><i class="bi bi-check-circle-fill"></i> Nouvelles demandes en quelques clics</li>
+          <li><i class="bi bi-check-circle-fill"></i> Suivi de l'état de vos demandes</li>
+        </ul>
+      }
+    </aside>
+
+    <section class="auth-main">
+      <h1>{{ isAdmin ? 'Connexion administrateur' : 'Connexion' }}</h1>
+      <p class="sub">Entrez votre e-mail et votre mot de passe.</p>
+
+      @if (justRegistered) {
+        <div class="alert-success-soft mb-3"><i class="bi bi-check-circle-fill"></i> Compte créé avec succès ! Vous pouvez maintenant vous connecter.</div>
+      }
+      @if (needLogin) {
+        <div class="alert-info-soft mb-3"><i class="bi bi-info-circle-fill"></i> Veuillez vous connecter pour accéder à cette page.</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="mb-3">
+          <label class="form-label" for="email">E-mail</label>
+          <input id="email" type="email" class="form-control" formControlName="email" placeholder="nom@exemple.tn" autocomplete="email" [class.is-invalid]="showError(form.controls.email)" />
+          @if (showError(form.controls.email)) {
+            <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i>
+              @if (form.controls.email.hasError('required')) { L'e-mail est obligatoire. } @else { Format d'e-mail invalide (exemple : nom&#64;exemple.tn). }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="password">Mot de passe</label>
+          <app-password-field [control]="form.controls.password" inputId="password" [state]="showError(form.controls.password) ? 'invalid' : ''" />
+          @if (showError(form.controls.password)) {
+            <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Le mot de passe est obligatoire.</div>
+          }
+        </div>
+
+        @if (error()) {
+          <div class="alert-error-soft mb-3" role="alert"><i class="bi bi-x-circle-fill"></i> {{ error() }}</div>
+        }
+
+        <button type="submit" class="btn-brand submit">Se connecter <i class="bi bi-arrow-right"></i></button>
+      </form>
+
+      @if (isAdmin) {
+        <p class="auth-foot">Vous êtes adhérent ? <a routerLink="/login">Connexion adhérent</a></p>
+      } @else {
+        <p class="auth-foot">Pas encore de compte ? <a routerLink="/register">Créer un compte</a></p>
+      }
+      <p class="auth-foot"><a routerLink="/connexion"><i class="bi bi-arrow-left"></i> Changer d'espace</a></p>
+    </section>
+  </div>
+</div>

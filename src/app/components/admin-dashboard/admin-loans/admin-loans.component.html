@@ -1,0 +1,92 @@
+<div class="seg mb-3" role="tablist" aria-label="Type d'opération">
+  <button type="button" role="tab" [attr.aria-selected]="tab() === 'demandes'" [class.on]="tab() === 'demandes'" (click)="tab.set('demandes')">
+    Demandes <span class="n">{{ pending().length }}</span>
+  </button>
+  <button type="button" role="tab" [attr.aria-selected]="tab() === 'cours'" [class.on]="tab() === 'cours'" (click)="tab.set('cours')">
+    Emprunts en cours <span class="n">{{ active().length }}</span>
+    @if (lateCount()) { <span class="n bad">{{ lateCount() }} retard{{ lateCount() > 1 ? 's' : '' }}</span> }
+  </button>
+  <button type="button" role="tab" [attr.aria-selected]="tab() === 'historique'" [class.on]="tab() === 'historique'" (click)="tab.set('historique')">
+    Historique <span class="n">{{ history().length }}</span>
+  </button>
+</div>
+
+<section class="panel">
+  @switch (tab()) {
+    @case ('demandes') {
+      <h2 class="panel-title">Demandes d'emprunt à traiter</h2>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead><tr><th>Adhérent</th><th>Livre</th><th>Demandé le</th><th class="text-end">Décision</th></tr></thead>
+          <tbody>
+            @for (l of pending(); track l.id) {
+              <tr>
+                <td><strong>{{ member(l) }}</strong></td>
+                <td>{{ book(l) }}
+                  @if (!hasStock(l)) { <span class="pill pill-ko ms-1">plus d'exemplaire</span> }
+                </td>
+                <td>{{ l.requestDate | date: 'dd/MM/yyyy' }}</td>
+                <td class="text-end text-nowrap">
+                  <button type="button" class="btn-sm-text ok" (click)="accept(l)" [disabled]="!hasStock(l)"><i class="bi bi-check-lg"></i> Accepter</button>
+                  <button type="button" class="btn-sm-text ko" (click)="refuse(l)"><i class="bi bi-x-lg"></i> Refuser</button>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="4" class="empty-row"><i class="bi bi-check2-all"></i> Aucune demande en attente.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @case ('cours') {
+      <h2 class="panel-title">Emprunts en cours</h2>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead><tr><th>Adhérent</th><th>Livre</th><th>Emprunté le</th><th>Retour prévu</th><th>Statut</th><th class="text-end">Retour</th></tr></thead>
+          <tbody>
+            @for (l of active(); track l.id) {
+              <tr [class.row-late]="isLate(l)">
+                <td><strong>{{ member(l) }}</strong></td>
+                <td>{{ book(l) }}</td>
+                <td>{{ l.borrowDate | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ l.dueDate | date: 'dd/MM/yyyy' }}</td>
+                <td>
+                  @if (isLate(l)) { <span class="pill pill-ko"><i class="bi bi-exclamation-triangle-fill"></i> En retard</span> }
+                  @else { <span class="pill pill-info">En cours</span> }
+                </td>
+                <td class="text-end"><button type="button" class="btn-sm-text ok" (click)="giveBack(l)"><i class="bi bi-box-arrow-in-down"></i> Enregistrer le retour</button></td>
+              </tr>
+            } @empty {
+              <tr><td colspan="6" class="empty-row">Aucun emprunt en cours.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @case ('historique') {
+      <h2 class="panel-title">Historique (retours et refus)</h2>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead><tr><th>Adhérent</th><th>Livre</th><th>Date</th><th>Résultat</th></tr></thead>
+          <tbody>
+            @for (l of history(); track l.id) {
+              <tr>
+                <td><strong>{{ member(l) }}</strong></td>
+                <td>{{ book(l) }}</td>
+                <td>{{ (l.returnedDate ?? l.requestDate) | date: 'dd/MM/yyyy' }}</td>
+                <td>
+                  @if (l.returnedDate) { <span class="pill pill-ok"><i class="bi bi-check2-circle"></i> Rendu</span> }
+                  @else { <span class="pill pill-ko"><i class="bi bi-x-circle-fill"></i> Refusée</span> }
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="4" class="empty-row">Historique vide.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</section>

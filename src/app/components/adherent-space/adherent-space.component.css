@@ -1,0 +1,19 @@
+.stat { display: flex; align-items: center; gap: 16px; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; height: 100%; }
+.stat strong { display: block; font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; line-height: 1; color: var(--navy); }
+.stat small { color: var(--muted); font-size: .85rem; }
+.ico { width: 48px; height: 48px; border-radius: 13px; display: grid; place-items: center; font-size: 1.3rem; flex-shrink: 0; }
+.ico-blue { background: #e5edfb; color: #1f4690; }
+.ico-gold { background: #fdf3dc; color: #8a5a00; }
+.ico-green { background: #e1f4ea; color: #146c47; }
+.late { display: block; font-style: normal; font-size: .78rem; color: var(--danger); font-weight: 600; margin-top: 2px; }
+.panel-title i { color: var(--gold-dark); margin-right: 6px; }
+.due { color: var(--muted); font-size: .86rem; }
+.small { padding: 5px 12px; font-size: .82rem; border-radius: 8px; }
+.hint { color: var(--muted); font-size: .85rem; margin: 12px 0 18px; }
+.hint a { font-weight: 700; }
+
+/* notation : les étoiles s'allument jusqu'à celle qu'on survole */
+.rate { display: inline-flex; gap: 2px; }
+.rate-star.on { color: #e0a82e; }
+.rate-send { margin-left: 8px; border: 1px solid #e0a82e; background: #fff; color: #7a5a10; border-radius: 999px; padding: 1px 10px; font-size: .78rem; font-weight: 600; }
+.rate-send:hover { background: #e0a82e; color: #fff; }

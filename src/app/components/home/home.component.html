@@ -1,0 +1,72 @@
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <span class="kicker light">Bibliothèque universitaire</span>
+      <h1>Lire, apprendre<br />et <em>découvrir.</em></h1>
+      <p>Consultez le catalogue, demandez vos livres en quelques clics et suivez vos emprunts depuis votre espace personnel.</p>
+      <div class="hero-actions">
+        <a routerLink="/catalogue" class="btn-brand"><i class="bi bi-search"></i> Explorer le catalogue</a>
+        @if (!user()) {
+          <a routerLink="/connexion" class="btn-outline-light-custom">Mon espace</a>
+        } @else if (isAdmin()) {
+          <a routerLink="/admin" class="btn-outline-light-custom">Espace administrateur</a>
+        } @else {
+          <a routerLink="/adherent" class="btn-outline-light-custom">Espace adhérent</a>
+        }
+      </div>
+    </div>
+    <ul class="hero-stats" aria-label="Chiffres clés">
+      <li><strong>{{ stats().titles }}</strong><span>titres au catalogue</span></li>
+      <li><strong>{{ stats().members }}</strong><span>adhérents</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="container block">
+  <div class="block-head">
+    <div>
+      <span class="kicker">Les plus demandés</span>
+      <h2>Les livres les plus empruntés</h2>
+    </div>
+    <a routerLink="/catalogue" class="link-more">Tout le catalogue <i class="bi bi-arrow-right"></i></a>
+  </div>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+    @for (b of topBooks(); track b.book.id; let i = $index) {
+      <div class="col"><app-book-card [book]="b.book" [badge]="'N°' + (i + 1) + ' · ' + b.count + ' emprunts'" /></div>
+    }
+  </div>
+</section>
+
+<section class="container block">
+  <div class="block-head">
+    <div>
+      <span class="kicker">Fraîchement arrivés</span>
+      <h2>Nouveaux livres</h2>
+    </div>
+  </div>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+    @for (b of newBooks(); track b.id) {
+      <div class="col"><app-book-card [book]="b" badge="NOUVEAUTÉ" /></div>
+    }
+  </div>
+</section>
+
+<section class="container block">
+  <div class="space">
+    <img class="space-photo" src="images/covers/notre-espace.jpeg" alt="Notre espace à la bibliothèque" />
+    <div class="space-text">
+      <h2>Retrouvez-nous sur place</h2>
+      <p>Venez consulter nos livres et poser vos questions directement à la bibliothèque.</p>
+    </div>
+  </div>
+</section>
+
+<section class="container block">
+  <div class="invite">
+    <div>
+      <h2>Envie de trouver votre prochaine lecture ?</h2>
+      <p>Recherchez par titre, par auteur ou par catégorie dans tout notre fonds.</p>
+    </div>
+    <a routerLink="/catalogue" class="btn-brand">Consulter le catalogue <i class="bi bi-arrow-right"></i></a>
+  </div>
+</section>

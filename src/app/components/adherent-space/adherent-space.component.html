@@ -1,0 +1,143 @@
+<div class="container page">
+  <div class="page-head">
+    <div>
+      <span class="kicker">Espace adhérent</span>
+      <h1>Bonjour {{ user()?.firstName }}</h1>
+      <p>Consultez vos emprunts et suivez l'état de vos demandes.</p>
+    </div>
+    <button type="button" class="btn-brand" (click)="openModal()"><i class="bi bi-plus-lg"></i> Nouvelle demande d'emprunt</button>
+  </div>
+
+  <!-- 3 cartes de chiffres -->
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+      <div class="stat">
+        <span class="ico ico-blue"><i class="bi bi-book"></i></span>
+        <div><strong>{{ counts().active }}</strong><small>Emprunts en cours</small>
+          @if (counts().late) { <em class="late"><i class="bi bi-exclamation-triangle-fill"></i> dont {{ counts().late }} en retard</em> }
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4">
+      <div class="stat">
+        <span class="ico ico-gold"><i class="bi bi-hourglass-split"></i></span>
+        <div><strong>{{ counts().pending }}</strong><small>Demandes en attente</small></div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4">
+      <div class="stat">
+        <span class="ico ico-green"><i class="bi bi-collection"></i></span>
+        <div><strong>{{ counts().total }}</strong><small>Total de mes emprunts</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- État des demandes -->
+  <section class="panel mb-4">
+    <h2 class="panel-title"><i class="bi bi-send"></i> Mes demandes d'emprunt</h2>
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead><tr><th>Livre</th><th>Date de la demande</th><th>État</th><th></th></tr></thead>
+        <tbody>
+          @for (l of requests(); track l.id) {
+            <tr>
+              <td><strong>{{ title(l) }}</strong></td>
+              <td>{{ l.requestDate | date: 'dd/MM/yyyy' }}</td>
+              <td>
+                @switch (l.requestStatus) {
+                  @case ('En attente') { <span class="pill pill-wait"><i class="bi bi-hourglass-split"></i> En attente</span> }
+                  @case ('Acceptée') { <span class="pill pill-ok"><i class="bi bi-check-circle-fill"></i> Acceptée</span> }
+                  @case ('Refusée') { <span class="pill pill-ko"><i class="bi bi-x-circle-fill"></i> Refusée</span> }
+                }
+              </td>
+              <td class="text-end">
+                @if (l.requestStatus === 'En attente') {
+                  <button type="button" class="btn-ghost small" (click)="cancel(l)">Annuler</button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="4" class="empty-row">Aucune demande pour le moment. Cliquez sur « Nouvelle demande d'emprunt ».</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Historique des emprunts -->
+  <section class="panel">
+    <h2 class="panel-title"><i class="bi bi-clock-history"></i> Historique de mes emprunts</h2>
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead><tr><th>Livre</th><th>Date d'emprunt</th><th>Date de retour</th><th>Statut</th><th>Mon avis</th></tr></thead>
+        <tbody>
+          @for (l of history(); track l.id) {
+            <tr [class.row-late]="loanStatus(l) === 'En retard'">
+              <td><strong>{{ title(l) }}</strong></td>
+              <td>{{ l.borrowDate | date: 'dd/MM/yyyy' }}</td>
+              <td>
+                @if (l.returnedDate) { {{ l.returnedDate | date: 'dd/MM/yyyy' }} }
+                @else { <span class="due">à rendre avant le {{ l.dueDate | date: 'dd/MM/yyyy' }}</span> }
+              </td>
+              <td>
+                @switch (loanStatus(l)) {
+                  @case ('En cours') { <span class="pill pill-info"><i class="bi bi-book"></i> En cours</span> }
+                  @case ('En retard') { <span class="pill pill-ko"><i class="bi bi-exclamation-triangle-fill"></i> En retard</span> }
+                  @case ('Rendu') { <span class="pill pill-ok"><i class="bi bi-check2-circle"></i> Rendu</span> }
+                }
+              </td>
+              <td>
+                @if (!l.returnedDate) {
+                  <span class="due">—</span>
+                } @else if (l.rating) {
+                  <app-star-rating [rating]="l.rating" [count]="1" [showCount]="false" />
+                } @else {
+                  <span class="rate" role="group" aria-label="Noter ce livre de 1 à 5" (mouseleave)="hover.set(null)">
+                   @for (n of stars; track n) {
+                      <button type="button" class="rate-star" [class.on]="filled(l, n)" (click)="pick(l, n)" (mouseenter)="hover.set({ id: l.id, n: n })" [attr.aria-label]="'Donner ' + n + ' sur 5'" [title]="'Noter ' + n + '/5'"><i class="bi bi-star-fill"></i></button>
+                      }
+                  </span>
+                @if (draft()[l.id]) {
+                  <button type="button" class="rate-send" (click)="sendRating(l)">Envoyer {{ draft()[l.id] }}/5</button>
+                  }               
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="5" class="empty-row">Aucun emprunt pour le moment.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<!-- Fenêtre : nouvelle demande -->
+@if (modalOpen()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="req-title" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h2 id="req-title">Nouvelle demande d'emprunt</h2>
+        <button type="button" class="modal-close" (click)="closeModal()" aria-label="Fermer"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <form (submit)="$event.preventDefault(); sendRequest()" novalidate>
+        <label class="form-label" for="bookChoice">Choisissez un livre disponible</label>
+        <select id="bookChoice" class="form-select" [formControl]="bookChoice" [class.is-invalid]="submitted() && bookChoice.invalid">
+          <option [ngValue]="null">— Sélectionner un livre —</option>
+          @for (b of availableBooks(); track b.id) {
+            <option [ngValue]="b.id">{{ b.title }} — {{ b.author }}</option>
+          }
+        </select>
+        @if (submitted() && bookChoice.invalid) {
+          <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Veuillez choisir un livre.</div>
+        }
+        <p class="hint">Votre demande sera « En attente » jusqu'à validation par la bibliothèque. Durée d'emprunt : 14 jours.
+          Vous préférez parcourir ? <a routerLink="/catalogue" (click)="closeModal()">Ouvrir le catalogue</a>.</p>
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn-ghost" (click)="closeModal()">Annuler</button>
+          <button type="submit" class="btn-brand">Envoyer la demande</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

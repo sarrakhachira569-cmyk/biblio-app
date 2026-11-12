@@ -1,0 +1,81 @@
+<!-- 4 cartes de chiffres -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3">
+    <div class="kpi">
+      <span class="ico ico-blue"><i class="bi bi-journal-bookmark"></i></span>
+      <div><strong>{{ stats().titles }}</strong><small>Livres (titres)</small><em>{{ stats().copies }} exemplaires (copies en rayon)</em></div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="kpi">
+      <span class="ico ico-green"><i class="bi bi-people"></i></span>
+      <div><strong>{{ stats().members }}</strong><small>Adhérents</small><em>inscrits</em></div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="kpi">
+      <span class="ico ico-violet"><i class="bi bi-arrow-left-right"></i></span>
+      <div><strong>{{ stats().active }}</strong><small>Emprunts en cours</small>
+        @if (stats().late) { <em class="late"><i class="bi bi-exclamation-triangle-fill"></i> {{ stats().late }} en retard</em> } @else { <em>aucun retard</em> }
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="kpi">
+      <span class="ico ico-gold"><i class="bi bi-hourglass-split"></i></span>
+      <div><strong>{{ stats().pending }}</strong><small>Demandes en attente</small><em>à traiter</em></div>
+    </div>
+  </div>
+</div>
+
+<!-- Boutons rapides -->
+<div class="quick mb-4">
+  <a routerLink="/admin/livres" [queryParams]="{ action: 'add' }" class="btn-brand"><i class="bi bi-plus-lg"></i> Ajouter un livre</a>
+  <a routerLink="/admin/emprunts" class="btn-navy"><i class="bi bi-check2-square"></i> Traiter les demandes</a>
+  <a routerLink="/admin/adherents" class="btn-ghost"><i class="bi bi-people"></i> Voir les adhérents</a>
+  <a routerLink="/admin/livres" class="btn-ghost"><i class="bi bi-journal-bookmark"></i> Gérer les livres</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-7">
+    <section class="panel h-100">
+      <h2 class="panel-title">Évolution des emprunts <small>(6 derniers mois)</small></h2>
+      <app-bar-chart [data]="monthly()" ariaLabel="Nombre d'emprunts par mois sur les 6 derniers mois" />
+    </section>
+  </div>
+  <div class="col-lg-5">
+    <section class="panel h-100">
+      <h2 class="panel-title">Livres les plus empruntés</h2>
+      <ol class="top">
+        @for (t of top(); track t.title; let i = $index) {
+          <li>
+            <span class="rank">{{ i + 1 }}</span>
+            <div class="top-body">
+              <div class="top-line"><strong>{{ t.title }}</strong><span>{{ t.count }}</span></div>
+              <div class="bar"><span [style.width.%]="t.pct"></span></div>
+            </div>
+          </li>
+        }
+      </ol>
+    </section>
+  </div>
+</div>
+
+<section class="panel">
+  <h2 class="panel-title">Dernières opérations</h2>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Opération</th><th>Adhérent</th><th>Livre</th></tr></thead>
+      <tbody>
+        @for (o of operations(); track $index) {
+          <tr>
+            <td>{{ o.date | date: 'dd/MM/yyyy' }}</td>
+            <td><span class="pill" [class]="'pill ' + o.pill"><i class="bi" [class]="'bi ' + o.icon"></i> {{ o.label }}</span></td>
+            <td>{{ o.member }}</td>
+            <td>{{ o.book }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

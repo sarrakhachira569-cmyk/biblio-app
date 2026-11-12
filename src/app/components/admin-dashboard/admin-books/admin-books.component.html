@@ -1,0 +1,117 @@
+<section class="panel">
+  <div class="toolbar">
+    <h2 class="panel-title m-0">Gestion des livres <small>({{ rows().length }})</small></h2>
+    <div class="filters">
+      <input type="search" class="form-control" placeholder="Rechercher un titre ou un auteur…" aria-label="Rechercher un livre" [value]="query()" (input)="onSearch($event)" />
+      <select class="form-select" aria-label="Filtrer par catégorie" [value]="categoryFilter()" (change)="onCategory($event)">
+        <option value="Toutes">Toutes les catégories</option>
+        @for (c of categories(); track c) { <option [value]="c">{{ c }}</option> }
+      </select>
+      <button type="button" class="btn-brand" (click)="openAdd()"><i class="bi bi-plus-lg"></i> Ajouter un livre</button>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr><th>Livre</th><th>Catégorie</th><th>Année · Éditeur</th><th class="text-center">Total</th><th class="text-center">Disponibles</th><th>Avis</th><th class="text-end">Actions</th></tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track r.book.id) {
+          <tr>
+            <td>
+              <div class="book-cell">
+                <img [src]="coverOf(r.book)" [alt]="'Couverture : ' + r.book.title" (error)="onImgError($event, r.book)" />
+                <div><strong>{{ r.book.title }}</strong><small>{{ r.book.author }}</small></div>
+              </div>
+            </td>
+            <td><span class="pill pill-grey">{{ r.book.category }}</span></td>
+            <td class="text-nowrap">{{ r.book.year }} · {{ r.book.publisher }}</td>
+            <td class="text-center">{{ r.book.copies }}</td>
+            <td class="text-center">
+              @if (r.left > 0) { <span class="pill pill-ok">{{ r.left }}</span> } @else { <span class="pill pill-ko">0</span> }
+            </td>
+            <td><app-star-rating [rating]="r.avg" [count]="r.count" [showCount]="false" /></td>
+            <td class="text-end text-nowrap">
+              <button type="button" class="btn-sm-icon" (click)="openEdit(r.book)" title="Modifier" [attr.aria-label]="'Modifier ' + r.book.title"><i class="bi bi-pencil"></i></button>
+              <button type="button" class="btn-sm-icon danger ms-1" (click)="askDelete(r.book)" title="Supprimer" [attr.aria-label]="'Supprimer ' + r.book.title"><i class="bi bi-trash3"></i></button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="7" class="empty-row">Aucun livre trouvé.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Fenêtre : ajout / modification -->
+@if (formOpen()) {
+  <div class="modal-overlay" (click)="closeForm()">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="book-form-title" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h2 id="book-form-title">{{ editing() ? 'Modifier le livre' : 'Ajouter un livre' }}</h2>
+        <button type="button" class="modal-close" (click)="closeForm()" aria-label="Fermer"><i class="bi bi-x-lg"></i></button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label" for="b-title">Titre</label>
+            <input id="b-title" class="form-control" formControlName="title" [class.is-invalid]="showError(form.controls.title)" />
+            @if (showError(form.controls.title)) { <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Le titre est obligatoire.</div> }
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="b-author">Auteur</label>
+            <input id="b-author" class="form-control" formControlName="author" [class.is-invalid]="showError(form.controls.author)" />
+            @if (showError(form.controls.author)) { <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> L'auteur est obligatoire.</div> }
+          </div>
+          <div class="col-sm-4">
+            <label class="form-label" for="b-year">Année d'édition</label>
+            <input id="b-year" type="number" class="form-control" formControlName="year" [class.is-invalid]="showError(form.controls.year)" />
+            @if (showError(form.controls.year)) { <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Année entre 1400 et {{ maxYear }}.</div> }
+          </div>
+          <div class="col-sm-8">
+            <label class="form-label" for="b-pub">Maison d'édition</label>
+            <input id="b-pub" class="form-control" formControlName="publisher" [class.is-invalid]="showError(form.controls.publisher)" />
+            @if (showError(form.controls.publisher)) { <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> La maison d'édition est obligatoire.</div> }
+          </div>
+          <div class="col-sm-8">
+            <label class="form-label" for="b-cat">Catégorie</label>
+            <input id="b-cat" class="form-control" formControlName="category" list="cat-list" placeholder="Choisir ou écrire une catégorie" [class.is-invalid]="showError(form.controls.category)" />
+            <datalist id="cat-list">@for (c of categories(); track c) { <option [value]="c"></option> }</datalist>
+            @if (showError(form.controls.category)) { <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> La catégorie est obligatoire.</div> }
+          </div>
+          <div class="col-sm-4">
+            <label class="form-label" for="b-copies">Nombre d'exemplaires</label>
+            <input id="b-copies" type="number" min="0" class="form-control" formControlName="copies" [class.is-invalid]="showError(form.controls.copies)" />
+            @if (showError(form.controls.copies)) { <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Entre 0 et 99.</div> }
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="b-cover">Image de couverture <small class="text-secondary fw-normal">(facultatif — images/nom.jpg ou lien https://…)</small></label>
+            <input id="b-cover" class="form-control" formControlName="cover" placeholder="Laisser vide : une couverture est générée" [class.is-invalid]="showError(form.controls.cover)" />
+            @if (showError(form.controls.cover)) { <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Écrivez images/nom-du-fichier.jpg ou un lien http(s)://…</div> }
+          </div>
+        </div>
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="button" class="btn-ghost" (click)="closeForm()">Annuler</button>
+          <button type="submit" class="btn-brand">{{ editing() ? 'Enregistrer' : 'Ajouter le livre' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Fenêtre : confirmation de suppression -->
+@if (toDelete(); as b) {
+  <div class="modal-overlay" (click)="toDelete.set(null)">
+    <div class="modal-box" style="max-width: 440px" role="alertdialog" aria-modal="true" aria-labelledby="del-title" (click)="$event.stopPropagation()">
+      <h2 id="del-title">Supprimer ce livre ?</h2>
+      <p class="mt-2 text-secondary">« {{ b.title }} » sera retiré définitivement du catalogue.</p>
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="button" class="btn-ghost" (click)="toDelete.set(null)">Annuler</button>
+        <button type="button" class="btn-danger-custom" (click)="confirmDelete()"><i class="bi bi-trash3"></i> Supprimer</button>
+      </div>
+    </div>
+  </div>
+}

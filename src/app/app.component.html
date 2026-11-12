@@ -1,0 +1,76 @@
+<app-navbar />
+
+<main>
+  <router-outlet />
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- 1) Marque + réseaux sociaux -->
+      <div class="col-lg-3 col-md-6">
+        <strong class="footer-brand"><i class="bi bi-book-half"></i> Biblio<span>Nova</span></strong>
+        <p class="footer-text">La bibliothèque universitaire en ligne : consultez le catalogue, empruntez vos livres et suivez vos demandes.</p>
+        <div class="social" aria-label="Réseaux sociaux">
+          @if (site.facebook) {
+            <a [href]="site.facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook (nouvel onglet)" title="Facebook"><i class="bi bi-facebook"></i></a>
+          }
+          @if (site.tiktok) {
+            <a [href]="site.tiktok" target="_blank" rel="noopener noreferrer" aria-label="TikTok (nouvel onglet)" title="TikTok"><i class="bi bi-tiktok"></i></a>
+          }
+          <a [href]="whatsappUrl" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp (nouvel onglet)" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <!-- 2) Contact -->
+      <div class="col-lg-3 col-md-6">
+        <h2 class="footer-title">Contact</h2>
+        <ul class="footer-list">
+          <li><i class="bi bi-envelope"></i> <a [href]="gmailUrl" target="_blank" rel="noopener noreferrer">{{ site.email }}</a></li>
+          <li><i class="bi bi-telephone"></i> <a [href]="'tel:' + site.phoneDial">{{ site.phoneDisplay }}</a></li>
+          <li><i class="bi bi-geo-alt"></i> <a [href]="mapsUrl" target="_blank" rel="noopener noreferrer">{{ site.address }}</a></li>
+        </ul>
+      </div>
+
+      <!-- 3) Horaires -->
+      <div class="col-lg-3 col-md-6">
+        <h2 class="footer-title">Horaires d'ouverture</h2>
+        <ul class="footer-list">
+          @for (h of site.hours; track h.text) {
+            <li><i class="bi" [class]="'bi ' + h.icon"></i> {{ h.text }}</li>
+          }
+        </ul>
+      </div>
+
+      <!-- 4) Services -->
+      <div class="col-lg-3 col-md-6">
+        <h2 class="footer-title">Services</h2>
+        <ul class="footer-list">
+          <li><i class="bi bi-file-earmark-text"></i> <span><strong>Rapport de stage :</strong> mise en page (table des matières, liste des tableaux et figures automatiques)</span></li>
+          <li><i class="bi bi-printer"></i> <span>Impression et reliure de PFE</span></li>
+        </ul>
+        <div class="partner">
+          <img src="images/covers/imprimerie-aymen.png" alt="Logo {{ site.partner }}" />
+          <div>
+            <strong>{{ site.partner }}</strong><br />
+            <a [href]="partnerMapsUrl" target="_blank" rel="noopener noreferrer"><i class="bi bi-geo-alt"></i> {{ site.partnerAddress }}</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <hr class="footer-sep" />
+    <small>© {{ year }} BiblioNova. Tous droits réservés.</small>
+  </div>
+</footer>
+
+<!-- Messages de confirmation / d'erreur -->
+<div class="toast-stack" aria-live="polite">
+  @for (t of toast.toasts(); track t.id) {
+    <div class="toast-item" [class]="'toast-item ' + t.type" role="status">
+      <i class="bi" [class.bi-check-circle-fill]="t.type === 'success'" [class.bi-exclamation-triangle-fill]="t.type === 'error'" [class.bi-info-circle-fill]="t.type === 'info'"></i>
+      <span>{{ t.text }}</span>
+    </div>
+  }
+</div>

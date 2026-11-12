@@ -1,0 +1,100 @@
+/* Bootstrap + Bootstrap Icons (importés ici, comme dans le cours) */
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+/* ───────── Variables : couleurs et police UNIQUES pour tout le site (cohérence visuelle) ───────── */
+:root {
+  --navy: #14213d;
+  --navy-2: #1f3257;
+  --gold: #c9a24b;
+  --gold-dark: #9a7a2c;
+  --gold-soft: #f6efdc;
+  --ink: #1b2437;
+  --muted: #6b7686;
+  --line: #e6e9ef;
+  --bg: #f6f7fa;
+  --ok: #1f8a5f;
+  --warn: #b7791f;
+  --danger: #c0392b;
+  --bs-primary: #14213d;
+  --bs-primary-rgb: 20, 33, 61;
+  --bs-body-font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --bs-body-color: var(--ink);
+  --bs-link-color: var(--navy-2);
+}
+
+html, body { background: var(--bg); }
+body { font-size: 15px; }
+h1, h2, h3, h4 { font-family: 'Playfair Display', Georgia, serif; color: var(--navy); }
+a { text-decoration: none; }
+main { min-height: 70vh; }
+
+/* ───────── Boutons ───────── */
+.btn-brand { background: var(--gold); border: 1px solid var(--gold); color: var(--navy); font-weight: 700; border-radius: 10px; padding: 10px 20px; transition: background .2s, transform .15s; }
+.btn-brand:hover { background: #d8b45e; color: var(--navy); transform: translateY(-1px); }
+.btn-navy { background: var(--navy); border: 1px solid var(--navy); color: #fff; font-weight: 600; border-radius: 10px; padding: 10px 20px; }
+.btn-navy:hover { background: var(--navy-2); color: #fff; }
+.btn-ghost { background: #fff; border: 1px solid var(--line); color: var(--navy); font-weight: 600; border-radius: 10px; padding: 10px 18px; }
+.btn-ghost:hover { border-color: var(--navy); color: var(--navy); }
+.btn-sm-icon { width: 34px; height: 34px; padding: 0; display: inline-grid; place-items: center; border-radius: 9px; border: 1px solid var(--line); background: #fff; color: var(--navy); }
+.btn-sm-icon:hover { background: var(--bg); }
+.btn-sm-icon.danger { color: var(--danger); }
+.btn-sm-icon.danger:hover { background: #fdecea; }
+
+/* ───────── Mise en page des pages ───────── */
+.page { padding-top: 34px; padding-bottom: 60px; }
+.page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px; margin-bottom: 26px; }
+.page-head h1 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); margin: 4px 0 4px; }
+.page-head p { margin: 0; color: var(--muted); }
+.kicker { font-size: .72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-dark); }
+.panel { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+.panel-title { font-size: 1.15rem; margin: 0 0 14px; }
+
+/* ───────── Tableaux ───────── */
+.data-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.data-table th { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.data-table td { padding: 12px; border-bottom: 1px solid #f0f2f6; vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: 0; }
+.data-table tr.row-late td { background: #fff7f5; }
+.empty-row { text-align: center; color: var(--muted); padding: 28px 12px !important; }
+
+/* ───────── Pastilles de statut ───────── */
+.pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 20px; font-size: .78rem; font-weight: 700; white-space: nowrap; }
+.pill-wait { background: #fdf3dc; color: #8a5a00; }
+.pill-ok { background: #e1f4ea; color: #146c47; }
+.pill-ko { background: #fdeaea; color: #a52a1f; }
+.pill-info { background: #e5edfb; color: #1f4690; }
+.pill-grey { background: #eef0f4; color: #4b5565; }
+
+/* ───────── Formulaires ───────── */
+.form-label { font-weight: 600; font-size: .88rem; margin-bottom: 5px; }
+.form-control, .form-select { border-radius: 10px; padding: 10px 13px; border-color: #d8dde6; }
+.form-control:focus, .form-select:focus { border-color: var(--gold); box-shadow: 0 0 0 .2rem rgba(201, 162, 75, .22); }
+.input-group > .form-control { border-radius: 10px 0 0 10px; }
+.input-group > .btn { border-radius: 0 10px 10px 0; border-color: #d8dde6; }
+.field-error { color: var(--danger); font-size: .82rem; margin-top: 5px; display: flex; gap: 6px; align-items: flex-start; }
+.field-ok { color: var(--ok); font-size: .82rem; margin-top: 5px; display: flex; gap: 6px; align-items: flex-start; }
+.alert-success-soft { background: #e1f4ea; color: #146c47; border: 1px solid #b9e2cc; border-radius: 10px; padding: 11px 14px; font-size: .9rem; }
+.alert-error-soft { background: #fdeaea; color: #a52a1f; border: 1px solid #f3c3bd; border-radius: 10px; padding: 11px 14px; font-size: .9rem; }
+.alert-info-soft { background: #e5edfb; color: #1f4690; border: 1px solid #c3d4f4; border-radius: 10px; padding: 11px 14px; font-size: .9rem; }
+
+/* ───────── Fenêtre modale (ajout livre, nouvelle demande, confirmation) ───────── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(20, 33, 61, .55); z-index: 1050; display: grid; place-items: center; padding: 16px; overflow-y: auto; }
+.modal-box { background: #fff; border-radius: 16px; width: 100%; max-width: 560px; padding: 24px; box-shadow: 0 24px 60px rgba(0, 0, 0, .3); }
+.modal-box h2 { font-size: 1.35rem; margin: 0; }
+.modal-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
+.modal-close { border: 0; background: transparent; font-size: 1.2rem; color: var(--muted); }
+
+/* ───────── Messages (toasts) ───────── */
+.toast-stack { position: fixed; bottom: 18px; right: 18px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; max-width: min(380px, calc(100vw - 36px)); }
+.toast-item { display: flex; gap: 10px; align-items: flex-start; background: var(--navy); color: #fff; padding: 12px 14px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, .25); font-size: .9rem; animation: toast-in .25s ease; }
+.toast-item.success i { color: #5fd3a1; }
+.toast-item.error { background: #7a1f16; }
+.toast-item.error i { color: #ffb4a8; }
+.toast-item.info i { color: var(--gold); }
+@keyframes toast-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* cache l'œil intégré du navigateur (Edge) : on garde seulement le nôtre */
+input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear { display: none; }

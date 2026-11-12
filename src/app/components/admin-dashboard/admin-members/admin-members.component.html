@@ -1,0 +1,34 @@
+<section class="panel">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+    <h2 class="panel-title m-0">Liste des adhérents <small class="text-secondary fs-6">({{ rows().length }})</small></h2>
+    <input type="search" class="form-control" style="max-width: 300px" placeholder="Rechercher un adhérent…" aria-label="Rechercher un adhérent" [value]="query()" (input)="onSearch($event)" />
+  </div>
+
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr><th>Nom complet</th><th>E-mail</th><th>Téléphone</th><th>Inscrit le</th><th class="text-center">Emprunts</th><th class="text-center">En cours</th><th class="text-center">Retards</th><th class="text-center">Demandes</th></tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track r.member.id) {
+          <tr>
+            <td><strong>{{ r.member.firstName }} {{ r.member.lastName }}</strong></td>
+            <td>{{ r.member.email }}</td>
+            <td>{{ r.member.phone }}</td>
+            <td>{{ r.member.joinedAt | date: 'dd/MM/yyyy' }}</td>
+            <td class="text-center">{{ r.stats.total }}</td>
+            <td class="text-center">{{ r.stats.active }}</td>
+            <td class="text-center">
+              @if (r.stats.late) { <span class="pill pill-ko">{{ r.stats.late }}</span> } @else { <span class="text-secondary">0</span> }
+            </td>
+            <td class="text-center">
+              @if (r.stats.pending) { <span class="pill pill-wait">{{ r.stats.pending }}</span> } @else { <span class="text-secondary">0</span> }
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="8" class="empty-row">Aucun adhérent trouvé.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

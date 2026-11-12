@@ -1,0 +1,13 @@
+.seg { display: inline-flex; flex-wrap: wrap; gap: 6px; background: #fff; border: 1px solid var(--line); padding: 5px; border-radius: 12px; }
+.seg button { border: 0; background: transparent; padding: 8px 14px; border-radius: 9px; font-weight: 600; font-size: .88rem; color: #4b5565; display: inline-flex; align-items: center; gap: 8px; }
+.seg button.on { background: var(--navy); color: #fff; }
+.n { background: rgba(120, 130, 150, .18); border-radius: 20px; padding: 1px 8px; font-size: .75rem; }
+.seg button.on .n { background: rgba(255, 255, 255, .22); }
+.n.bad { background: var(--danger); color: #fff; }
+.btn-sm-text { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 6px 12px; font-size: .82rem; font-weight: 700; margin-left: 6px; }
+.btn-sm-text.ok { color: #146c47; border-color: #b9e2cc; background: #f1faf5; }
+.btn-sm-text.ok:hover:not(:disabled) { background: #dff3e8; }
+.btn-sm-text.ko { color: #a52a1f; border-color: #f3c3bd; background: #fff6f5; }
+.btn-sm-text.ko:hover { background: #fde4e1; }
+.btn-sm-text:disabled { opacity: .45; cursor: not-allowed; }
+.empty-row i { color: var(--ok); margin-right: 6px; }

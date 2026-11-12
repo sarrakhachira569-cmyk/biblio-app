@@ -1,0 +1,87 @@
+<div class="container page">
+  <div class="auth-wrap">
+    <aside class="auth-aside">
+      <span class="kicker" style="color: var(--gold)">Nouvel adhérent</span>
+      <h2>Rejoignez la<br /><em>bibliothèque.</em></h2>
+      <p>Créez votre compte gratuitement pour emprunter des livres et suivre vos demandes.</p>
+      <ul>
+        <li><i class="bi bi-check-circle-fill"></i> Emprunts et retours suivis</li>
+        <li><i class="bi bi-check-circle-fill"></i> Demandes en ligne</li>
+        <li><i class="bi bi-check-circle-fill"></i> Accès au catalogue complet</li>
+      </ul>
+    </aside>
+
+    <section class="auth-main">
+      <h1>Créer un compte</h1>
+      <p class="sub">Tous les champs sont obligatoires.</p>
+
+      @if (success()) {
+        <div class="alert-success-soft mb-3" role="status"><i class="bi bi-check-circle-fill"></i> Compte créé avec succès ! Redirection vers la connexion…</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label class="form-label" for="lastName">Nom</label>
+            <input id="lastName" class="form-control" formControlName="lastName" autocomplete="family-name" [class.is-invalid]="showError(form.controls.lastName)" [class.is-valid]="isValid(form.controls.lastName)" />
+            @if (showError(form.controls.lastName)) {
+              <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> {{ form.controls.lastName.hasError('required') ? 'Le nom est obligatoire.' : 'Au moins 2 caractères.' }}</div>
+            }
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="firstName">Prénom</label>
+            <input id="firstName" class="form-control" formControlName="firstName" autocomplete="given-name" [class.is-invalid]="showError(form.controls.firstName)" [class.is-valid]="isValid(form.controls.firstName)" />
+            @if (showError(form.controls.firstName)) {
+              <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> {{ form.controls.firstName.hasError('required') ? 'Le prénom est obligatoire.' : 'Au moins 2 caractères.' }}</div>
+            }
+          </div>
+
+          <div class="col-12">
+            <label class="form-label" for="email">E-mail</label>
+            <input id="email" type="email" class="form-control" formControlName="email" placeholder="nom@exemple.tn" autocomplete="email" [class.is-invalid]="showError(form.controls.email)" [class.is-valid]="isValid(form.controls.email)" />
+            @if (showError(form.controls.email)) {
+              <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> {{ form.controls.email.hasError('required') ? "L'e-mail est obligatoire." : "Format d'e-mail invalide (exemple : nom@exemple.tn)." }}</div>
+            } @else if (isValid(form.controls.email)) {
+              <div class="field-ok"><i class="bi bi-check-circle-fill"></i> E-mail valide.</div>
+            }
+          </div>
+
+          <div class="col-12">
+            <label class="form-label" for="phone">Numéro de téléphone</label>
+            <input id="phone" type="tel" class="form-control" formControlName="phone" placeholder="22 345 678" autocomplete="tel" [class.is-invalid]="showError(form.controls.phone)" [class.is-valid]="isValid(form.controls.phone)" />
+            @if (showError(form.controls.phone)) {
+              <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> {{ form.controls.phone.hasError('required') ? 'Le numéro de téléphone est obligatoire.' : 'Numéro invalide (8 à 15 chiffres).' }}</div>
+            }
+          </div>
+
+          <div class="col-sm-6">
+            <label class="form-label" for="password">Mot de passe</label>
+            <app-password-field [control]="form.controls.password" inputId="password" placeholder="Min. 6 caractères" autocomplete="new-password" [state]="stateOf(form.controls.password)" />
+            @if (showError(form.controls.password)) {
+              <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> {{ form.controls.password.hasError('required') ? 'Le mot de passe est obligatoire.' : 'Au moins 6 caractères.' }}</div>
+            }
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="confirmPassword">Confirmer le mot de passe</label>
+            <app-password-field [control]="form.controls.confirmPassword" inputId="confirmPassword" placeholder="Retapez le mot de passe" autocomplete="new-password" [state]="confirmState()" />
+            @if (mismatch()) {
+              <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Les deux mots de passe ne correspondent pas.</div>
+            } @else if (showError(form.controls.confirmPassword)) {
+              <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Veuillez confirmer le mot de passe.</div>
+            } @else if (confirmState() === 'valid') {
+              <div class="field-ok"><i class="bi bi-check-circle-fill"></i> Les mots de passe correspondent.</div>
+            }
+          </div>
+        </div>
+
+        @if (error()) {
+          <div class="alert-error-soft mt-3" role="alert"><i class="bi bi-x-circle-fill"></i> {{ error() }}</div>
+        }
+
+        <button type="submit" class="btn-brand submit" [class.disabled]="success()">Créer mon compte <i class="bi bi-arrow-right"></i></button>
+      </form>
+
+      <p class="auth-foot">Déjà adhérent ? <a routerLink="/login">Se connecter</a></p>
+    </section>
+  </div>
+</div>

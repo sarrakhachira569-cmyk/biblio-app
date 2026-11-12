@@ -1,0 +1,21 @@
+<div class="container page">
+  <div class="page-head">
+    <div>
+      <span class="kicker">Espace administrateur</span>
+      <h1>Gestion de la bibliothèque</h1>
+      <p>Livres, adhérents, demandes d'emprunt, emprunts et retours.</p>
+    </div>
+  </div>
+
+  <nav class="admin-tabs" aria-label="Sections de l'administration">
+    <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><i class="bi bi-speedometer2"></i> Tableau de bord</a>
+    <a routerLink="/admin/livres" routerLinkActive="active"><i class="bi bi-journal-bookmark"></i> Livres</a>
+    <a routerLink="/admin/adherents" routerLinkActive="active"><i class="bi bi-people"></i> Adhérents</a>
+    <a routerLink="/admin/emprunts" routerLinkActive="active">
+      <i class="bi bi-arrow-left-right"></i> Emprunts &amp; retours
+      @if (stats().pending) { <span class="count">{{ stats().pending }}</span> }
+    </a>
+  </nav>
+
+  <router-outlet />
+</div>

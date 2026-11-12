@@ -1,0 +1,30 @@
+<article class="book-card">
+  <div class="cover">
+    <img [src]="cover()" [alt]="'Couverture : ' + book().title" loading="lazy" (error)="onCoverError()" />
+    @if (badge()) {
+      <span class="badge-corner">{{ badge() }}</span>
+    }
+  </div>
+
+  <div class="body">
+    <span class="category">{{ book().category }}</span>
+    <h3 class="title">{{ book().title }}</h3>
+    <p class="author">{{ book().author }}</p>
+    <p class="edition"><i class="bi bi-calendar3"></i> {{ book().year }} <span class="dot">·</span> {{ book().publisher }}</p>
+
+    <div class="availability" [class.is-ok]="available()" [class.is-ko]="!available()">
+      <i class="bi" [class.bi-check-circle-fill]="available()" [class.bi-x-circle-fill]="!available()"></i>
+      @if (available()) {
+        {{ availText() }}
+      } @else {
+        Indisponible
+      }
+    </div>
+
+    <app-star-rating [rating]="average()" [count]="ratingCount()" />
+
+    @if (canBorrow()) {
+      <button type="button" class="btn-borrow" (click)="borrow()"><i class="bi bi-bookmark-plus"></i> Emprunter</button>
+    }
+  </div>
+</article>

@@ -1,0 +1,5 @@
+.admin-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 24px; border-bottom: 1px solid var(--line); }
+.admin-tabs a { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; padding: 11px 16px; font-weight: 600; font-size: .92rem; color: #4b5565; border-bottom: 3px solid transparent; margin-bottom: -5px; }
+.admin-tabs a:hover { color: var(--navy); }
+.admin-tabs a.active { color: var(--navy); border-bottom-color: var(--gold); }
+.count { background: var(--danger); color: #fff; border-radius: 20px; font-size: .7rem; padding: 1px 7px; font-weight: 700; }

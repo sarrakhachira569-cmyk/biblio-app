@@ -1,0 +1,40 @@
+<header class="topbar">
+  <div class="container bar">
+    <a routerLink="/" class="brand" (click)="close()" aria-label="BiblioNova, accueil">
+      <span class="brand-mark"><i class="bi bi-book-half"></i></span>
+      <span class="brand-text">Biblio<span>Nova</span><small>Bibliothèque universitaire</small></span>
+    </a>
+
+    <button class="burger" type="button" (click)="toggle()" [attr.aria-expanded]="menuOpen()" aria-controls="main-menu" aria-label="Ouvrir le menu">
+      <i class="bi" [class.bi-list]="!menuOpen()" [class.bi-x-lg]="menuOpen()"></i>
+    </button>
+
+    <div class="menu" id="main-menu" [class.open]="menuOpen()">
+      <nav class="links" aria-label="Menu principal">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="close()">Accueil</a>
+        <a routerLink="/catalogue" routerLinkActive="active" (click)="close()">Catalogue</a>
+        @if (!user()) {
+          <!-- visiteur : les 4 liens demandés par le sujet -->
+          <a routerLink="/adherent" routerLinkActive="active" (click)="close()">Espace adhérent</a>
+          <a routerLink="/admin" routerLinkActive="active" (click)="close()">Espace administrateur</a>
+        } @else if (isAdmin()) {
+          <a routerLink="/admin" routerLinkActive="active" (click)="close()">Espace administrateur</a>
+        } @else {
+          <a routerLink="/adherent" routerLinkActive="active" (click)="close()">Espace adhérent</a>
+        }
+      </nav>
+
+      <div class="account">
+        @if (user(); as u) {
+          <div class="chip" [title]="u.email">
+            <span class="avatar">{{ initial() }}</span>
+            <span class="who"><b>{{ fullName() }}</b><small>{{ roleLabel() }}</small></span>
+          </div>
+          <button type="button" class="btn-ghost logout" (click)="logout()"><i class="bi bi-box-arrow-right"></i> Déconnexion</button>
+        } @else {
+          <a routerLink="/connexion" class="btn-brand login" (click)="close()"><i class="bi bi-person"></i> Connexion</a>
+        }
+      </div>
+    </div>
+  </div>
+</header>
