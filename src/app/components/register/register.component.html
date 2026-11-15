@@ -38,9 +38,9 @@
 
           <div class="col-12">
             <label class="form-label" for="email">E-mail</label>
-            <input id="email" type="email" class="form-control" formControlName="email" placeholder="nom@exemple.tn" autocomplete="email" [class.is-invalid]="showError(form.controls.email)" [class.is-valid]="isValid(form.controls.email)" />
+            <input id="email" type="email" class="form-control" formControlName="email" placeholder="nom@exemple.com" autocomplete="email" [class.is-invalid]="showError(form.controls.email)" [class.is-valid]="isValid(form.controls.email)" />
             @if (showError(form.controls.email)) {
-              <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> {{ form.controls.email.hasError('required') ? "L'e-mail est obligatoire." : "Format d'e-mail invalide (exemple : nom@exemple.tn)." }}</div>
+              <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> {{ form.controls.email.hasError('required') ? "L'e-mail est obligatoire." : "Format d'e-mail invalide (exemple : nom@exemple.com)." }}</div>
             } @else if (isValid(form.controls.email)) {
               <div class="field-ok"><i class="bi bi-check-circle-fill"></i> E-mail valide.</div>
             }

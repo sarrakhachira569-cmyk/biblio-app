@@ -16,3 +16,7 @@
 .empty i { font-size: 2.6rem; color: var(--gold); }
 .empty h2 { font-size: 1.3rem; margin: 10px 0 6px; }
 .empty p { color: var(--muted); }
+.search-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.search-row .search { flex: 1 1 280px; }
+.search-field { width: 200px; flex: 0 0 auto; }
+@media (max-width: 575.98px) { .search-field { width: 100%; } }

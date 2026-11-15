@@ -2,7 +2,12 @@
   <div class="toolbar">
     <h2 class="panel-title m-0">Gestion des livres <small>({{ rows().length }})</small></h2>
     <div class="filters">
-      <input type="search" class="form-control" placeholder="Rechercher un titre ou un auteur…" aria-label="Rechercher un livre" [value]="query()" (input)="onSearch($event)" />
+      <input type="search" class="form-control" [placeholder]="placeholder()" aria-label="Rechercher un livre" [value]="query()" (input)="onSearch($event)" />
+      <select class="form-select" aria-label="Rechercher dans" [value]="searchField()" (change)="onField($event)">
+        <option value="all">Titre et auteur</option>
+        <option value="title">Titre seulement</option>
+        <option value="author">Auteur seulement</option>
+      </select>
       <select class="form-select" aria-label="Filtrer par catégorie" [value]="categoryFilter()" (change)="onCategory($event)">
         <option value="Toutes">Toutes les catégories</option>
         @for (c of categories(); track c) { <option [value]="c">{{ c }}</option> }
@@ -87,11 +92,36 @@
             <input id="b-copies" type="number" min="0" class="form-control" formControlName="copies" [class.is-invalid]="showError(form.controls.copies)" />
             @if (showError(form.controls.copies)) { <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Entre 0 et 99.</div> }
           </div>
-          <div class="col-12">
-            <label class="form-label" for="b-cover">Image de couverture <small class="text-secondary fw-normal">(facultatif — images/nom.jpg ou lien https://…)</small></label>
-            <input id="b-cover" class="form-control" formControlName="cover" placeholder="Laisser vide : une couverture est générée" [class.is-invalid]="showError(form.controls.cover)" />
-            @if (showError(form.controls.cover)) { <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Écrivez images/nom-du-fichier.jpg ou un lien http(s)://…</div> }
+                    <div class="col-12">
+            <label class="form-label">Image de couverture</label>
+            <div class="cover-box">
+              <div class="cover-preview">
+                @if (coverPreview()) {
+                  <img [src]="coverPreview()" alt="Aperçu de la couverture" (load)="onPreviewLoad()" (error)="onPreviewError()" />
+                } @else {
+                  <div class="cover-empty"><i class="bi bi-image"></i><span>Aucune image</span></div>
+                }
+              </div>
+              <div class="cover-actions">
+                <input #fileInput type="file" accept="image/*" hidden (change)="onFile($event)" />
+                <div class="d-flex flex-wrap align-items-center gap-3">
+                  <button type="button" class="btn-ghost" (click)="fileInput.click()"><i class="bi bi-upload"></i> {{ coverPreview() ? 'Changer l’image' : 'Choisir une image' }}</button>
+                  @if (coverPreview()) {
+                    <button type="button" class="link-danger" (click)="clearCover()"><i class="bi bi-trash3"></i> Supprimer l’image</button>
+                  }
+                </div>
+                <input class="form-control" type="url" placeholder="ou coller un lien internet (https://…)" aria-label="Lien de l'image" [value]="urlText()" (input)="onCoverUrl($event)" [class.is-invalid]="showError(form.controls.cover)" />
+                @if (showError(form.controls.cover)) {
+                  <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Le lien doit commencer par http:// ou https://</div>
+                }
+                @if (coverMsg()) {
+                  <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> {{ coverMsg() }}</div>
+                }
+                <small class="text-secondary">Facultatif : sans image, une couverture est créée automatiquement.</small>
+              </div>
+            </div>
           </div>
+
         </div>
         <div class="d-flex justify-content-end gap-2 mt-4">
           <button type="button" class="btn-ghost" (click)="closeForm()">Annuler</button>

@@ -36,10 +36,10 @@
       <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
         <div class="mb-3">
           <label class="form-label" for="email">E-mail</label>
-          <input id="email" type="email" class="form-control" formControlName="email" placeholder="nom@exemple.tn" autocomplete="email" [class.is-invalid]="showError(form.controls.email)" />
+          <input id="email" type="email" class="form-control" formControlName="email" placeholder="nom@exemple.com" autocomplete="email" [class.is-invalid]="showError(form.controls.email)" />
           @if (showError(form.controls.email)) {
             <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i>
-              @if (form.controls.email.hasError('required')) { L'e-mail est obligatoire. } @else { Format d'e-mail invalide (exemple : nom&#64;exemple.tn). }
+              @if (form.controls.email.hasError('required')) { L'e-mail est obligatoire. } @else { Adresse e-mail invalide : elle doit contenir « &#64; » et un domaine (exemple : nom&#64;exemple.com). }
             </div>
           }
         </div>
@@ -52,11 +52,13 @@
           }
         </div>
 
-        @if (error()) {
+        @if (lockLeft() > 0) {
+          <div class="alert-error-soft mb-3" role="alert"><i class="bi bi-hourglass-split"></i> Trop de tentatives. Réessayez dans {{ lockLeft() }} seconde{{ lockLeft() > 1 ? 's' : '' }}.</div>
+        } @else if (error()) {
           <div class="alert-error-soft mb-3" role="alert"><i class="bi bi-x-circle-fill"></i> {{ error() }}</div>
         }
 
-        <button type="submit" class="btn-brand submit">Se connecter <i class="bi bi-arrow-right"></i></button>
+        <button type="submit" class="btn-brand submit" [disabled]="lockLeft() > 0">Se connecter <i class="bi bi-arrow-right"></i></button>
       </form>
 
       @if (isAdmin) {

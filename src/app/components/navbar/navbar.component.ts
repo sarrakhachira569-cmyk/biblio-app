@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 
@@ -24,6 +24,16 @@ export class NavbarComponent {
   user = this.auth.currentUser;
   isAdmin = this.auth.isAdmin;
   menuOpen = signal(false);
+
+  /** adresse actuelle : sert à allumer « Espace adhérent » aussi sur /login et /register */
+  private url = signal(this.router.url);
+  inAdherentArea = computed(() => /^\/(adherent|login|register)(\/|\?|$)/.test(this.url()));
+
+  constructor() {
+    this.router.events.subscribe((e) => {
+      if (e instanceof NavigationEnd) this.url.set(e.urlAfterRedirects);
+    });
+  }
 
   fullName = computed(() => {
     const u = this.user();

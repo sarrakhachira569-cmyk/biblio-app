@@ -3,14 +3,21 @@
     <div>
       <span class="kicker">Notre collection</span>
       <h1>Catalogue des livres</h1>
-      <p>Recherchez un livre, filtrez par catégorie, puis empruntez-le en un clic.</p>
+      <p>Recherchez par titre ou par auteur, filtrez par catégorie, puis empruntez en un clic.</p>
     </div>
   </div>
 
   <div class="tools panel">
-    <div class="search">
-      <i class="bi bi-search"></i>
-      <input type="search" class="form-control" placeholder="Rechercher par titre ou par auteur…" aria-label="Rechercher par titre ou par auteur" [value]="query()" (input)="onSearch($event)" />
+    <div class="search-row">
+      <div class="search">
+        <i class="bi bi-search"></i>
+        <input type="search" class="form-control" [placeholder]="placeholder()" aria-label="Rechercher un livre" [value]="query()" (input)="onSearch($event)" />
+      </div>
+      <select class="form-select search-field" aria-label="Rechercher dans" [value]="searchField()" (change)="onField($event)">
+        <option value="all">Titre et auteur</option>
+        <option value="title">Titre seulement</option>
+        <option value="author">Auteur seulement</option>
+      </select>
     </div>
 
     <div class="cats" role="group" aria-label="Filtrer par catégorie">
