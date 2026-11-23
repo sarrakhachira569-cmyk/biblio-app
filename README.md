@@ -172,6 +172,14 @@ Open your browser and visit:
 
 ---
 
+## 🌐 GitHub Pages
+
+The site is built and deployed automatically when changes are pushed to `main`. In the repository settings, set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**.
+
+The published site is available at [https://sarrakhachira569-cmyk.github.io/biblio-app/](https://sarrakhachira569-cmyk.github.io/biblio-app/).
+
+---
+
 ## 🧩 Application Architecture
 
 BiblioNova follows Angular's component-based architecture, organizing the application into separate and reusable elements.
