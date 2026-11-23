@@ -32,6 +32,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/biblio-app/",
               "budgets": [
                 {
                   "type": "initial",
